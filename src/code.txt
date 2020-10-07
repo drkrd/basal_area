@@ -1,0 +1,16 @@
+aois_nadir <- list()
+for(name in names(aois))
+{
+  aoi <- lasflightline(aois[[name]])
+  flist <- unique(aoi@data$flightlineID)
+  meangle_fl <- data.frame()
+  for(fl in flist)
+  {
+    aoi_subset <- lasfilter(aoi, flightlineID == fl)
+    meangle <- abs(mean(aoi_subset@data$ScanAngleRank))
+    meangle_fl <- rbind(meangle_fl,c(meangle,fl))
+  }
+  flid <- meangle_fl[,2][which.min(meangle_fl[,1])]
+  print(flid)
+  aois_nadir[[name]] <- c(aois_nadir, lasfilter(aoi, flightlineID == flid))
+}
